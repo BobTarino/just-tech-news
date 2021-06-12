@@ -54,12 +54,37 @@ router.post('/', (req, res) => {
       title: req.body.title,
       post_url: req.body.post_url,
       user_id: req.body.user_id
+      // Sequelize will add created_at and updated_at
     })
       .then(dbPostData => res.json(dbPostData))
       .catch(err => {
         console.log(err);
         res.status(500).json(err);
       });
+});
+// Update Post's Title
+router.put('/:id', (req, res) => {
+    Post.update(
+        {
+          title: req.body.title 
+        }, 
+        {
+          where: {
+           id: req.params.id
+          } 
+        }
+    )
+        .then(dbUserData => {
+          if (!dbUserData[0]) {
+            res.status(404).json({ message: 'No user found with this id' });
+            return;
+          }
+          res.json(dbUserData);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json(err);
+        });
 });
 
 
