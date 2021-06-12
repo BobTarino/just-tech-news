@@ -4,7 +4,7 @@ const sequelize = require('../config/connection');
 // create our User model
 class User extends Model {}
 
-// define table columns and configuration
+// define table columns and configuration // provides context as to how inherited methods should work
 User.init(
   {
     // define an id column
