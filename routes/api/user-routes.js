@@ -4,33 +4,37 @@ const { User } = require('../../models');
 // GET /api/users
 router.get('/', (req, res) => {
     // Access our User model and run .findAll() method) // equivalent of SQL query: SELECT * FROM users;
-    User.findAll()
-      .then(dbUserData => res.json(dbUserData))
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-    });
+    User.findAll({
+        // do not show password
+        attributes: { exclude: ['password'] }
+    })
+        .then(dbUserData => res.json(dbUserData))
+        .catch(err => {
+          console.log(err);
+          res.status(500).json(err);
+        });   
 });
 
 // GET /api/users/1
 router.get('/:id', (req, res) => {
     // variation of findALL() method //  equivalent to SQL query: SELECT * FROM users WHERE id = 1
     User.findOne({
-      where: {
-        id: req.params.id
-      }
-    })
-      .then(dbUserData => {
-        if (!dbUserData) {
-          res.status(404).json({ message: 'No user found with this id' });
-          return;
+        attributes: { exclude: ['password'] },
+        where: {
+          id: req.params.id
         }
-        res.json(dbUserData);
       })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-      });
+        .then(dbUserData => {
+          if (!dbUserData) {
+            res.status(404).json({ message: 'No user found with this id' });
+            return;
+          }
+          res.json(dbUserData);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json(err);
+        });
 });
 
 // POST /api/users
