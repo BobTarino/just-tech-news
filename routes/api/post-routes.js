@@ -6,15 +6,22 @@ const { Post, User, Vote } = require('../../models');
 // get all users
 router.get('/', (req, res) => {
     Post.findAll({
-      attributes: ['id', 'post_url', 'title', 'created_at'],
-      order: [['created_at', 'DESC']], 
-      // JOIN with User table using include property
-      include: [
-        {
-          model: User,
-          attributes: ['username']
-        }
-      ]
+        attributes: [
+            'id',
+            'post_url',
+            'title',
+            'created_at',
+            [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
+        ],
+
+        order: [['created_at', 'DESC']],
+        // JOIN with User table using include property
+        include: [
+            {
+                model: User,
+                attributes: ['username']
+            }
+        ]
     })
       // remember to always include promise to capture reponse from db call
       .then(dbPostData => res.json(dbPostData))
@@ -29,7 +36,13 @@ router.get('/:id', (req, res) => {
       where: {
         id: req.params.id
       },
-      attributes: ['id', 'post_url', 'title', 'created_at'],
+      attributes: [
+        'id',
+        'post_url',
+        'title',
+        'created_at',
+        [sequelize.literal('(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)'), 'vote_count']
+      ],
       include: [
         {
           model: User,
@@ -49,6 +62,7 @@ router.get('/:id', (req, res) => {
         res.status(500).json(err);
       });
 });
+  
 // Create a Post
 router.post('/', (req, res) => {
     // expects {title: 'Taskmaster goes public!', post_url: 'https://taskmaster.com/press', user_id: 1}
