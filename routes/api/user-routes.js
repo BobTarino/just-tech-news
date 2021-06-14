@@ -19,23 +19,32 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     // variation of findALL() method //  equivalent to SQL query: SELECT * FROM users WHERE id = 1
     User.findOne({
-        attributes: { exclude: ['password'] },
-        where: {
-          id: req.params.id
+      attributes: { exclude: ['password'] },
+      where: {
+        id: req.params.id
+      },
+      include: [
+        {
+          model: Post,
+          attributes: ['id', 'title', 'post_url', 'created_at']
         },
-        include: [
-          {
+        // include the Comment model here:
+        {
+          model: Comment,
+          attributes: ['id', 'comment_text', 'created_at'],
+          include: {
             model: Post,
-            attributes: ['id', 'title', 'post_url', 'created_at']
-          },
-          {
-            model: Post,
-            attributes: ['title'],
-            through: Vote,
-            as: 'voted_posts'
+            attributes: ['title']
           }
-        ]
-      })
+        },
+        {
+          model: Post,
+          attributes: ['title'],
+          through: Vote,
+          as: 'voted_posts'
+        }
+      ]
+    })
         .then(dbUserData => {
           if (!dbUserData) {
             res.status(404).json({ message: 'No user found with this id' });
