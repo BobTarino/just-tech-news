@@ -59,10 +59,6 @@ router.get('/:id', (req, res) => {
                 model: User,
                 attributes: ['username']
             }
-        },
-        {
-            model: User,
-            attributes: ['username']
         }
     ]
     })
