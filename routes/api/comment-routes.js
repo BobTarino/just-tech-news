@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Comment } = require('../../models');
 
 router.get('/', (req, res) => {
-    Post.findAll({
+    Comment.findAll({
         attributes: [
             'id',
             'comment_text',
@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-    Post.destroy({
+    Comment.destroy({
       where: {
         id: req.params.id
       }
