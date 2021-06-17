@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const routes = require('./routes');
+const controllers = require('./controllers');
 const sequelize = require('./config/connection');
 
 const app = express();
@@ -18,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 // middleware function that can take all of the contents of public folder and serve them as static assets
 app.use(express.static(path.join(__dirname, 'public')));
 
-// turn on routes
-app.use(routes);
+// turn on controllers
+app.use(controllers);
 
 
 // turn on connection to db and server
