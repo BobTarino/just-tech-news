@@ -160,4 +160,16 @@ router.delete('/:id', (req, res) => {
       });
 });
 
+// logout route destroys the session variables and resets the cookie
+router.post('/logout', (req, res) => {
+  if (req.session.loggedIn) {
+    req.session.destroy(() => {
+      // HTTP 204 No Content success status 
+      res.status(204).end();
+    });
+  }
+  else {
+    res.status(404).end();
+  }
+});
 module.exports = router;
