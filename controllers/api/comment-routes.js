@@ -19,17 +19,24 @@ router.get('/', (req, res) => {
         res.status(500).json(err);
       });
 });
+
+
 router.post('/', (req, res) => {
+  // check the session
+  // wrapping queries in conditional ensures that only logged in users can interact w/ db
+  if (req.session) {
     Comment.create({
-        comment_text: req.body.comment_text,
-        user_id: req.body.user_id,
-        post_id: req.body.post_id
+      comment_text: req.body.comment_text,
+      post_id: req.body.post_id,
+      // use the id from the session
+      user_id: req.session.user_id
     })
-        .then(dbCommentData => res.json(dbCommentData))
-        .catch(err => {
-          console.log(err);
-          res.status(400).json(err);
-        });
+      .then(dbCommentData => res.json(dbCommentData))
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  }
 });
 
 
