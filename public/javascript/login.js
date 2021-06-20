@@ -41,9 +41,9 @@ async function loginFormHandler(event) {
         }),
         headers: { 'Content-Type': 'application/json' }
       });
-  
+      // redirect to dashboard if login is successful
       if (response.ok) {
-        document.location.replace('/');
+        document.location.replace('/dashboard');
       } else {
         alert(response.statusText);
       }
