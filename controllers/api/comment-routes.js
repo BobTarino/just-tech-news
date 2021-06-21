@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Comment } = require('../../models');
+const withAuth = require('../../utils/auth');
 
 router.get('/', (req, res) => {
     Comment.findAll({
@@ -21,7 +22,7 @@ router.get('/', (req, res) => {
 });
 
 
-router.post('/', (req, res) => {
+router.post('/', withAuth, (req, res) => {
   // check the session
   // wrapping queries in conditional ensures that only logged in users can interact w/ db
   if (req.session) {
@@ -40,7 +41,7 @@ router.post('/', (req, res) => {
 });
 
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', withAuth, (req, res) => {
     Comment.destroy({
       where: {
         id: req.params.id
@@ -60,3 +61,4 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
+module.exports = withAuth; 
